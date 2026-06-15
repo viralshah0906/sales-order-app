@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Field Sales Order Collection</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link
+        rel="stylesheet"
+        href="css/styles.css"
+    >
+</head>
+
+<body>
+
+    <div class="app-container">
+
+        <header class="app-header">
+
+            <h1>
+                Field Sales Order Collection
+            </h1>
+
+        </header>
+
+        <main>
+
+            <!-- SHOP DETAILS -->
+
+            <section class="card">
+
+                <h2>
+                    Shop Details
+                </h2>
+
+                <div class="form-group">
+
+                    <label>
+                        Shop Name *
+                    </label>
+
+                    <input
+                        id="shopName"
+                        type="text"
+                        placeholder="Enter shop name"
+                    >
+                    <div
+                        id="shopSuggestions"
+                        class="shop-suggestions"
+                    ></div>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Contact Number *
+                    </label>
+
+                    <input
+                        id="contactNumber"
+                        type="tel"
+                        placeholder="Enter contact number"
+                    >
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+                        Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                        rows="3"
+                        placeholder="Enter address"
+                    ></textarea>
+
+                </div>
+
+                <div class="form-group">
+
+                    <button
+                        type="button"
+                        id="toggleCommentsBtn"
+                        class="secondary-btn"
+                    >
+                        + Add Comments
+                    </button>
+
+                </div>
+
+                <div
+                    id="commentsContainer"
+                    class="hidden"
+                >
+
+                    <div class="form-group">
+
+                        <label>
+                            Additional Comments
+                        </label>
+
+                        <textarea
+                            id="comments"
+                            rows="4"
+                            placeholder="Enter additional comments..."
+                        ></textarea>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+            <!-- PRODUCT SEARCH -->
+
+            <section class="card">
+
+                <h2>
+                    Add Product
+                </h2>
+
+                <input
+                    type="text"
+                    id="productSearch"
+                    placeholder="Search product..."
+                    autocomplete="off"
+                >
+                
+                <div id="productStatus" class="product-status">
+                    Loading products...
+                </div>
+
+                <div
+                    id="searchResults"
+                    class="search-results"
+                ></div>
+
+            </section>
+
+            <!-- ORDER ITEMS -->
+
+            <section class="card">
+
+                <h2>
+                    Order Items
+                </h2>
+
+                <div id="orderItems"></div>
+
+            </section>
+
+        </main>
+
+    </div>
+
+    <!-- STICKY FOOTER -->
+
+    <footer class="summary-footer">
+
+        <div>
+
+            <div id="itemCount">
+                Items: 0
+            </div>
+
+            <div id="grandTotal">
+                ₹0
+            </div>
+
+        </div>
+
+        <button id="submitBtn">
+            Submit Order
+        </button>
+
+    </footer>
+
+    <!-- ORDER REVIEW MODAL -->
+
+    <div id="reviewModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h2>Review Order</h2>
+
+            <div id="reviewContent"></div>
+
+            <div class="modal-actions">
+
+                <button
+                    id="cancelReviewBtn"
+                    class="secondary-btn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="confirmOrderBtn"
+                    class="primary-btn"
+                >
+                    Confirm Order
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SUCCESS MODAL -->
+
+    <div id="successModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h2>✅ Order Submitted</h2>
+
+            <div id="successContent"></div>
+
+            <div class="modal-actions">
+
+                <button
+                    id="newOrderBtn"
+                    class="primary-btn"
+                >
+                    New Order
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TOAST -->
+
+    <div id="toast" class="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    <script src="js/products.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
