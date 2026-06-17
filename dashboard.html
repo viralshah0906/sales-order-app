@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Business Dashboard
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/dashboard.css"
+    >
+
+</head>
+
+<body>
+
+    <!-- LOGIN SCREEN -->
+
+    <div
+        id="loginScreen"
+        class="login-screen"
+    >
+
+        <div class="login-card">
+
+            <h1>
+                Business Dashboard
+            </h1>
+
+            <p>
+                Enter dashboard password
+            </p>
+
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Password"
+            >
+
+            <button
+                id="loginBtn"
+            >
+                Access Dashboard
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- DASHBOARD -->
+
+    <div
+        id="dashboardContainer"
+        class="dashboard hidden"
+    >
+
+        <!-- HEADER -->
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <h1>
+                    Business Dashboard
+                </h1>
+
+                <p id="lastUpdated">
+                    Last Updated
+                </p>
+
+            </div>
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+            >
+                Logout
+            </button>
+
+        </header>
+
+        <!-- KPI CARDS -->
+
+        <section
+            class="kpi-grid"
+        >
+
+            <div class="kpi-card">
+
+                <span>
+                    Orders
+                </span>
+
+                <h2
+                    id="todayOrders"
+                >
+                    -
+                </h2>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <span>
+                    Revenue
+                </span>
+
+                <h2
+                    id="todayRevenue"
+                >
+                    -
+                </h2>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <span>
+                    Active Shops
+                </span>
+
+                <h2
+                    id="totalShops"
+                >
+                    -
+                </h2>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <span>
+                    Products
+                </span>
+
+                <h2
+                    id="totalProducts"
+                >
+                    -
+                </h2>
+
+            </div>
+
+        </section>
+
+        <!-- FILTERS -->
+
+        <section
+            class="filters"
+        >
+
+            <label>
+
+                Select Date
+
+            </label>
+
+            <input
+                type="date"
+                id="dateFilter"
+            >
+
+        </section>
+
+        <!-- ORDERS -->
+
+        <section
+            class="orders-section"
+        >
+
+            <div
+                class="section-title"
+            >
+
+                Orders
+
+            </div>
+
+            <div
+                id="ordersContainer"
+                class="orders-container"
+            >
+
+            </div>
+
+        </section>
+
+    </div>
+
+    <!-- ORDER MODAL -->
+
+    <div
+        id="orderModal"
+        class="modal hidden"
+    >
+
+        <div
+            class="modal-overlay"
+        ></div>
+
+        <div
+            class="modal-content"
+        >
+
+            <button
+                id="closeModalBtn"
+                class="close-btn"
+            >
+                ✕
+            </button>
+
+            <div
+                id="modalBody"
+            ></div>
+
+        </div>
+
+    </div>
+
+    <script src="js/dashboard.js"></script>
+
+</body>
+
+</html>
