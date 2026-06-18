@@ -2,6 +2,7 @@ const API_URL =
     "https://script.google.com/macros/s/AKfycbzCGyw512dT1ahJeD_8CVAH59_iSadbtm4CqcRt7vzrHMMCjnLpcibgYkoNbQ1r5-g/exec";
 
 let currentOrders = [];
+// let filteredOrders = [];
 
 /* LOGIN */
 
@@ -52,12 +53,57 @@ const totalProductsEl =
         "totalProducts"
     );
 
+const loadingOverlay =
+    document.getElementById(
+        "loadingOverlay"
+    );
+
 /* ORDERS */
 
-const dateFilter =
+const toggleFiltersBtn =
     document.getElementById(
-        "dateFilter"
+        "toggleFiltersBtn"
     );
+
+const filtersPanel =
+    document.getElementById(
+        "filtersPanel"
+    );
+
+const fromDate =
+    document.getElementById(
+        "fromDate"
+    );
+
+const toDate =
+    document.getElementById(
+        "toDate"
+    );
+
+const shopFilter =
+    document.getElementById(
+        "shopFilter"
+    );
+
+const applyFiltersBtn =
+    document.getElementById(
+        "applyFiltersBtn"
+    );
+
+const clearFiltersBtn =
+    document.getElementById(
+        "clearFiltersBtn"
+    );
+
+toggleFiltersBtn.addEventListener(
+    "click",
+    () => {
+
+        filtersPanel.classList.toggle(
+            "hidden"
+        );
+    }
+);
 
 const ordersContainer =
     document.getElementById(
@@ -74,6 +120,27 @@ const orderModal =
         "orderModal"
     );
 
+const presetRadios =
+    document.querySelectorAll(
+        'input[name="datePreset"]'
+    );
+
+const currentRange =
+    document.getElementById(
+        "currentRange"
+    );
+
+presetRadios.forEach(
+    radio => {
+
+        radio.addEventListener(
+            "change",
+            handlePresetChange
+        );
+
+    }
+);
+
 const modalBody =
     document.getElementById(
         "modalBody"
@@ -88,6 +155,11 @@ closeModalBtn.addEventListener(
     "click",
     closeOrderModal
 );
+
+// shopSearch.addEventListener(
+//     "input",
+//     handleShopSearch
+// );
 
 document
     .querySelector(
@@ -117,24 +189,29 @@ logoutBtn.addEventListener(
     logout
 );
 
-dateFilter.addEventListener(
-    "change",
-    async () => {
-
-        const date =
-            dateFilter.value;
-
-        await loadDashboard(
-            date
-        );
-
-        await loadOrders(
-            date
-        );
-
-        updateLastUpdated();
-    }
+applyFiltersBtn.addEventListener(
+    "click",
+    applyFilters
 );
+
+// dateFilter.addEventListener(
+//     "change",
+//     async () => {
+
+//         const date =
+//             dateFilter.value;
+
+//         await loadDashboard(
+//             date
+//         );
+
+//         await loadOrders(
+//             date
+//         );
+
+//         updateLastUpdated();
+//     }
+// );
 
 /* INIT */
 
@@ -185,14 +262,70 @@ async function showDashboard() {
             .toISOString()
             .split("T")[0];
 
-    dateFilter.value =
+    fromDate.value =
         today;
 
-    await loadDashboard(today);
+    toDate.value =
+        today;
 
-    await loadOrders(today);
+    handlePresetChange();
+
+    await loadDashboard();
+
+    await loadOrders();
 
     updateLastUpdated();
+}
+
+async function applyFilters() {
+
+    try {
+
+        showLoading();
+
+        await loadDashboard();
+
+        await loadOrders();
+
+        updateLastUpdated();
+
+    } finally {
+
+        hideLoading();
+    }
+}
+
+clearFiltersBtn.addEventListener(
+    "click",
+    clearFilters
+);
+
+function showLoading() {
+
+    loadingOverlay.classList.remove(
+        "hidden"
+    );
+}
+
+function hideLoading() {
+
+    loadingOverlay.classList.add(
+        "hidden"
+    );
+}
+
+async function clearFilters() {
+
+    const today =
+        new Date()
+            .toISOString()
+            .split("T")[0];
+
+    fromDate.value = today;
+    toDate.value = today;
+    shopFilter.value = "";
+
+    await applyFilters();
 }
 
 async function login() {
@@ -269,15 +402,18 @@ function logout() {
 
 /* DASHBOARD */
 
-async function loadDashboard(
-    selectedDate
-) {
+async function loadDashboard() {
 
     try {
 
         const response =
             await fetch(
-                `${API_URL}?action=dashboard&date=${selectedDate}`
+                `${API_URL}?action=dashboard` +
+                `&fromDate=${fromDate.value}` +
+                `&toDate=${toDate.value}` +
+                `&shop=${encodeURIComponent(
+                    shopFilter.value
+                )}`
             );
 
         const data =
@@ -307,9 +443,7 @@ async function loadDashboard(
 
 /* ORDERS */
 
-async function loadOrders(
-    selectedDate
-) {
+async function loadOrders() {
 
     try {
 
@@ -322,7 +456,12 @@ async function loadOrders(
 
         const response =
             await fetch(
-                `${API_URL}?action=ordersByDate&date=${selectedDate}`
+                `${API_URL}?action=orders` +
+                `&fromDate=${fromDate.value}` +
+                `&toDate=${toDate.value}` +
+                `&shop=${encodeURIComponent(
+                    shopFilter.value
+                )}`
             );
 
         const orders =
@@ -347,72 +486,145 @@ async function loadOrders(
     }
 }
 
+fromDate.addEventListener(
+    "change",
+    updateCurrentRange
+);
+
+toDate.addEventListener(
+    "change",
+    updateCurrentRange
+);
+
 function renderOrders(
     orders
 ) {
 
     currentOrders = orders;
+
+    // filteredOrders = orders;
+
+    renderFilteredOrders(
+        orders
+    );
+}
+
+function formatDate(
+    date
+) {
+
+    return date
+        .toISOString()
+        .split("T")[0];
+}
+
+function handlePresetChange() {
+
+    const selectedPreset =
+        document.querySelector(
+            'input[name="datePreset"]:checked'
+        ).value;
+
+    const today =
+        new Date();
+
+    let from;
+    let to;
+
     if (
-        orders.length === 0
+        selectedPreset ===
+        "today"
     ) {
 
-        ordersContainer.innerHTML =
-            `
-            <div class="empty-state">
-                No orders found for this date
-            </div>
-            `;
+        from =
+            new Date(today);
+
+        to =
+            new Date(today);
+
+        disableDateInputs();
+
+    }
+
+    else if (
+        selectedPreset ===
+        "last7"
+    ) {
+
+        from =
+            new Date(today);
+
+        from.setDate(
+            today.getDate() - 6
+        );
+
+        to =
+            new Date(today);
+
+        disableDateInputs();
+
+    }
+
+    else if (
+        selectedPreset ===
+        "month"
+    ) {
+
+        from =
+            new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1
+            );
+
+        to =
+            new Date(today);
+
+        disableDateInputs();
+
+    }
+
+    else {
+
+        enableDateInputs();
+
+        updateCurrentRange();
 
         return;
     }
 
-    ordersContainer.innerHTML =
-        "";
+    fromDate.value =
+        formatDate(from);
 
-    orders.forEach(
-        order => {
+    toDate.value =
+        formatDate(to);
 
-            const card =
-                document.createElement(
-                    "div"
-                );
+    updateCurrentRange();
+    applyFilters();
+}
 
-            card.className =
-                "order-card";
-            
-            card.addEventListener(
-                "click",
-                () => openOrderModal(order)
-            );
+function disableDateInputs() {
 
-            card.innerHTML =
-                `
-                <div class="order-shop">
-                    🏪 ${order.shopName}
-                </div>
+    fromDate.disabled =
+        true;
 
-                <div class="order-total">
-                    ₹${Number(
-                        order.grandTotal
-                    ).toLocaleString()}
-                </div>
+    toDate.disabled =
+        true;
+}
 
-                <div class="order-meta">
-                    ${order.products.length} Products
-                </div>
+function enableDateInputs() {
 
-                <div class="order-meta">
-                    ${new Date(
-                        order.timestamp
-                    ).toLocaleString()}
-                </div>
-                `;
+    fromDate.disabled =
+        false;
 
-            ordersContainer.appendChild(
-                card
-            );
-        }
-    );
+    toDate.disabled =
+        false;
+}
+
+function updateCurrentRange() {
+
+    currentRange.textContent =
+        `Viewing: ${fromDate.value} → ${toDate.value}`;
 }
 
 function openOrderModal(
@@ -613,6 +825,103 @@ Thank You`;
     window.open(
         whatsappUrl,
         "_blank"
+    );
+}
+
+// function handleShopSearch() {
+
+//     const term =
+//         shopSearch.value
+//             .trim()
+//             .toLowerCase();
+
+//     if (!term) {
+
+//         renderFilteredOrders(
+//             currentOrders
+//         );
+
+//         return;
+//     }
+
+//     const matches =
+//         currentOrders.filter(
+//             order =>
+//                 order.shopName
+//                     .toLowerCase()
+//                     .includes(term)
+//         );
+
+//     renderFilteredOrders(
+//         matches
+//     );
+// }
+
+function renderFilteredOrders(
+    orders
+) {
+
+    if (
+        orders.length === 0
+    ) {
+
+        ordersContainer.innerHTML =
+            `
+            <div class="empty-state">
+                No matching shops found
+            </div>
+            `;
+
+        return;
+    }
+
+    ordersContainer.innerHTML =
+        "";
+
+    orders.forEach(
+        order => {
+
+            const card =
+                document.createElement(
+                    "div"
+                );
+
+            card.className =
+                "order-card";
+
+            card.addEventListener(
+                "click",
+                () => openOrderModal(order)
+            );
+
+            card.innerHTML =
+                `
+                <div class="order-shop">
+                    🏪 ${order.shopName}
+                </div>
+
+                <div class="order-total">
+                    ₹${Number(
+                        order.grandTotal
+                    ).toLocaleString()}
+                </div>
+
+                <div class="order-meta">
+                    ${order.products.length}
+                    Products
+                </div>
+
+                <div class="order-meta">
+                    ${new Date(
+                        order.timestamp
+                    ).toLocaleString()}
+                </div>
+                `;
+
+            ordersContainer.appendChild(
+                card
+            );
+        }
     );
 }
 

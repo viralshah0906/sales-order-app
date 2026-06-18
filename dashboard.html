@@ -154,23 +154,137 @@
 
         <!-- FILTERS -->
 
-        <section
-            class="filters"
-        >
+        <section class="filters">
 
-            <label>
+            <button
+                id="toggleFiltersBtn"
+                class="filter-toggle-btn"
+            >
+                🔍 Filters
+            </button>
 
-                Select Date
-
-            </label>
-
-            <input
-                type="date"
-                id="dateFilter"
+            <div
+                id="filtersPanel"
+                class="filters-panel hidden"
             >
 
-        </section>
+                <div class="preset-section">
 
+                    <label class="preset-title">
+                        Quick Presets
+                    </label>
+
+                    <div class="preset-options">
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="datePreset"
+                                value="today"
+                                checked
+                            >
+                            Today
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="datePreset"
+                                value="last7"
+                            >
+                            Last 7 Days
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="datePreset"
+                                value="month"
+                            >
+                            This Month
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="datePreset"
+                                value="custom"
+                            >
+                            Custom Range
+                        </label>
+
+                    </div>
+
+                    <div
+                        id="currentRange"
+                        class="current-range"
+                    >
+                    </div>
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label>
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fromDate"
+                    >
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label>
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="toDate"
+                    >
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label>
+                        Shop Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="shopFilter"
+                        placeholder="Search shop..."
+                    >
+
+                </div>
+
+                <div class="filter-actions">
+
+                    <button
+                        id="applyFiltersBtn"
+                        class="apply-btn"
+                    >
+                        Apply Filters
+                    </button>
+
+                    <button
+                        id="clearFiltersBtn"
+                        class="clear-btn"
+                    >
+                        Clear Filters
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+        
         <!-- ORDERS -->
 
         <section
@@ -224,6 +338,17 @@
 
         </div>
 
+    </div>
+
+    <!-- Overlay -->
+     
+    <div
+        id="loadingOverlay"
+        class="loading-overlay hidden"
+    >
+        <div class="loading-card">
+            Loading Dashboard...
+        </div>
     </div>
 
     <script src="js/dashboard.js"></script>
