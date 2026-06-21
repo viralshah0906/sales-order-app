@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        Product Analytics
+    </title>
+
+    <link
+        rel="stylesheet"
+        href="css/products.css"
+    >
+
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+
+    <div
+        id="loginScreen"
+        class="login-screen"
+    >
+
+        <div class="login-card">
+
+            <h1>
+                Product Analytics
+            </h1>
+
+            <p>
+                Enter dashboard password
+            </p>
+
+            <input
+                type="password"
+                id="passwordInput"
+                placeholder="Password"
+            >
+
+            <button
+                id="loginBtn"
+            >
+                Login
+            </button>
+
+        </div>
+
+    </div>
+
+    <!-- MAIN PAGE -->
+
+    <div
+        id="productsContainer"
+        class="hidden"
+    >
+
+        <!-- HEADER -->
+
+        <header class="page-header">
+
+            <div>
+
+                <h1>
+                    Product Analytics
+                </h1>
+
+                <p>
+                    Product performance insights
+                </p>
+
+            </div>
+
+            <button
+                id="logoutBtn"
+                class="logout-btn"
+            >
+                Logout
+            </button>
+
+        </header>
+
+        <!-- NAVIGATION -->
+
+        <nav class="top-nav">
+
+            <a
+                href="dashboard.html"
+            >
+                Dashboard
+            </a>
+
+            <span>|</span>
+
+            <a
+                href="products.html"
+                class="active-link"
+            >
+                Products
+            </a>
+
+        </nav>
+
+        <!-- KPI CARDS -->
+
+        <section class="kpi-grid">
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Revenue
+                </div>
+
+                <div
+                    id="totalRevenue"
+                    class="kpi-value"
+                >
+                    ₹0
+                </div>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Units Sold
+                </div>
+
+                <div
+                    id="unitsSold"
+                    class="kpi-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Active Products
+                </div>
+
+                <div
+                    id="activeProducts"
+                    class="kpi-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+            <div class="kpi-card">
+
+                <div class="kpi-label">
+                    Unsold Products
+                </div>
+
+                <div
+                    id="unsoldProducts"
+                    class="kpi-value"
+                >
+                    0
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- FILTERS -->
+
+        <section class="filters">
+
+            <button
+                id="toggleFiltersBtn"
+                class="filter-toggle-btn"
+            >
+                🔍 Filters
+            </button>
+
+            <div
+                id="filtersPanel"
+                class="filters-panel hidden"
+            >
+
+                <!-- PRESETS -->
+
+                <div class="preset-section">
+
+                    <label class="preset-title">
+                        Quick Presets
+                    </label>
+
+                    <div class="preset-options">
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="datePreset"
+                                value="today"
+                                checked
+                            >
+                            Today
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="datePreset"
+                                value="last7"
+                            >
+                            Last 7 Days
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="datePreset"
+                                value="month"
+                            >
+                            This Month
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="datePreset"
+                                value="custom"
+                            >
+                            Custom Range
+                        </label>
+
+                    </div>
+
+                    <div
+                        id="currentRange"
+                        class="current-range"
+                    >
+                    </div>
+
+                </div>
+
+                <!-- DATE RANGE -->
+
+                <div class="filter-group">
+
+                    <label>
+                        From Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="fromDate"
+                    >
+
+                </div>
+
+                <div class="filter-group">
+
+                    <label>
+                        To Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="toDate"
+                    >
+
+                </div>
+
+                <!-- SHOP FILTER -->
+
+                <div class="filter-group">
+
+                    <label>
+                        Shop Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="shopFilter"
+                        placeholder="Search shop..."
+                    >
+
+                </div>
+
+                <div class="filter-actions">
+
+                    <button
+                        id="applyFiltersBtn"
+                        class="apply-btn"
+                    >
+                        Apply Filters
+                    </button>
+
+                    <button
+                        id="clearFiltersBtn"
+                        class="clear-btn"
+                    >
+                        Clear Filters
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- SORTING -->
+
+        <section class="sort-section">
+
+            <label>
+                Sort By
+            </label>
+
+            <select
+                id="sortSelect"
+            >
+
+                <option value="revenueAsc">
+                    Revenue Low → High
+                </option>
+
+                <option value="revenueDesc">
+                    Revenue High → Low
+                </option>
+
+                <option value="unitsAsc">
+                    Units Sold Low → High
+                </option>
+
+                <option value="unitsDesc">
+                    Units Sold High → Low
+                </option>
+
+                <option value="nameAsc">
+                    Product Name A → Z
+                </option>
+
+                <option value="nameDesc">
+                    Product Name Z → A
+                </option>
+
+            </select>
+
+        </section>
+
+        <!-- LAST UPDATED -->
+
+        <div
+            id="lastUpdated"
+            class="last-updated"
+        >
+        </div>
+
+        <!-- PRODUCTS -->
+
+        <section
+            id="productsGrid"
+            class="products-grid"
+        >
+
+        </section>
+
+    </div>
+
+    <!-- PRODUCT MODAL -->
+
+    <div
+        id="productModal"
+        class="modal hidden"
+    >
+
+        <div
+            class="modal-overlay"
+        ></div>
+
+        <div
+            class="modal-content"
+        >
+
+            <button
+                id="closeModalBtn"
+                class="close-btn"
+            >
+                ✕
+            </button>
+
+            <div
+                id="modalBody"
+            >
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- LOADING -->
+
+    <div
+        id="loadingOverlay"
+        class="loading-overlay hidden"
+    >
+
+        <div
+            class="loading-card"
+        >
+            Loading Product Analytics...
+        </div>
+
+    </div>
+
+    <script src="js/product-analytics.js"></script>
+
+</body>
+
+</html>
