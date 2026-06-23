@@ -114,7 +114,7 @@ function handleSearch() {
         .filter(product =>
             product.name.toLowerCase().includes(term)
         )
-        .slice(0, 8);
+        .slice(0, 50);
 
     if (matches.length === 0) {
 
@@ -815,20 +815,6 @@ function showToast(message) {
         toast.classList.remove("show");
     }, 2500);
 }
-
-document.addEventListener(
-    "click",
-    (event) => {
-
-        const clickedInsideSearch =
-            searchInput.contains(event.target) ||
-            searchResults.contains(event.target);
-
-        if (!clickedInsideSearch) {
-            searchResults.innerHTML = "";
-        }
-    }
-);
 
 searchInput.addEventListener(
     "focus",
