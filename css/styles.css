@@ -49,8 +49,12 @@ body {
 
 .form-group label {
     display: block;
-    margin-bottom: 6px;
-    font-weight: 600;
+    margin-bottom: 8px;
+
+    font-weight: 700;
+    font-size: 16px;
+
+    color: #374151;
 }
 
 input,
