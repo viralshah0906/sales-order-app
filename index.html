@@ -18,6 +18,11 @@
 </head>
 
 <body>
+    <div class="version">
+
+        v1.0.0
+
+    </div>
 
     <div class="app-container">
 
@@ -69,52 +74,169 @@
                     🏪 Shop Details
                 </div>
 
-                <div class="form-group">
+                <div id="shopSearchContainer">
 
-                    <label>
-                        Shop Name *
-                    </label>
+                    <div class="form-group">
 
-                    <input
-                        id="shopName"
-                        type="text"
-                        placeholder="Enter shop name"
-                    >
+                        <label>
+                            Shop Name *
+                        </label>
+
+                        <input
+                            id="shopName"
+                            type="text"
+                            placeholder="Enter shop name"
+                        >
+
+                        <div
+                            id="shopSuggestions"
+                            class="shop-suggestions"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <div id="selectedShopCard" class="selected-shop-card hidden">
+
+                    <div class="selected-shop-main">
+
+                        <div class="selected-shop-title">
+
+                            <span
+                                id="selectedShopDot"
+                                class="shop-status-dot">
+                            </span>
+
+                            <span
+                                id="selectedShopName"
+                                class="selected-shop-name">
+                            </span>
+
+                        </div>
+
+                        <div
+                            id="selectedShopContact"
+                            class="selected-shop-contact">
+                        </div>
+
+                        <div
+                            id="selectedShopAddress"
+                            class="selected-shop-address">
+                        </div>
+
+                    </div>
+
+                    <div class="selected-shop-actions">
+
+                        <button
+                            id="editShopBtn"
+                            type="button"
+                            class="card-action-btn">
+
+                            ✏️ Edit
+
+                        </button>
+
+                        <button
+                            id="changeShopBtn"
+                            type="button"
+                            class="card-action-btn">
+
+                            🔄 Change
+
+                        </button>
+
+                    </div>
+
                     <div
-                        id="shopSuggestions"
-                        class="shop-suggestions"
-                    ></div>
+                        id="shopEditSection"
+                        class="shop-edit-section hidden">
+
+                        <div class="form-group">
+
+                            <label>
+                                Contact Number
+                            </label>
+
+                            <input
+                                id="editContactNumber"
+                                type="text"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>
+                                Address
+                            </label>
+
+                            <textarea
+                                id="editAddress"
+                                rows="3">
+                            </textarea>
+
+                        </div>
+
+                        <div class="shop-edit-actions">
+
+                            <button
+                                id="saveShopBtn"
+                                type="button"
+                                class="primary-btn">
+
+                                Save
+
+                            </button>
+
+                            <button
+                                id="cancelShopBtn"
+                                type="button"
+                                class="secondary-btn">
+
+                                Cancel
+
+                            </button>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
-                <div class="form-group">
+                <div id="shopDetailsContainer">
 
-                    <label>
-                        Contact Number *
-                    </label>
+                    <div class="form-group">
 
-                    <input
-                        id="contactNumber"
-                        type="tel"
-                        placeholder="Enter contact number"
-                    >
+                        <label>
+                            Contact Number *
+                        </label>
+
+                        <input
+                            id="contactNumber"
+                            type="tel"
+                            placeholder="Enter contact number"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Address
+                        </label>
+
+                        <textarea
+                            id="address"
+                            rows="2"
+                            placeholder="Enter address"
+                        ></textarea>
+
+                    </div>
 
                 </div>
-
-                <div class="form-group">
-
-                    <label>
-                        Address
-                    </label>
-
-                    <textarea
-                        id="address"
-                        rows="2"
-                        placeholder="Enter address"
-                    ></textarea>
-
-                </div>
-
+                
                 <div class="form-group">
 
                     <button
@@ -158,21 +280,17 @@
                     📦 Products
                 </div>
 
-                <input
-                    type="text"
-                    id="productSearch"
-                    placeholder="Search product..."
-                    autocomplete="off"
-                >
-                
-                <div id="productStatus" class="product-status">
-                    Loading products...
-                </div>
+                <button
+                    id="openProductModalBtn"
+                    type="button"
+                    class="add-product-btn">
 
-                <div
-                    id="searchResults"
-                    class="search-results"
-                ></div>
+                    + Add Product
+
+                </button>
+
+                <div id="selectedProducts">
+                </div>
 
             </section>
 
@@ -276,6 +394,128 @@
     <div id="toast" class="toast">
         <span id="toastMessage"></span>
     </div>
+
+    <div
+        id="productModal"
+        class="modal hidden">
+
+        <div class="modal-content product-modal">
+
+            <div class="modal-header">
+
+                <h2>
+                    📦 Add Product
+                </h2>
+
+                <button
+                    id="closeProductModalBtn"
+                    class="close-btn">
+
+                    ✕
+
+                </button>
+
+            </div>
+
+            <input
+                id="modalSearchInput"
+                type="text"
+                placeholder="Search by name, variant, rate..."
+            >
+
+            <div
+                id="modalProductCount"
+                class="product-count">
+            </div>
+
+            <div
+                id="modalSearchResults"
+                class="modal-search-results">
+            </div>
+
+            <div
+                id="sheetOverlay"
+                class="sheet-overlay hidden">
+            </div>
+
+            <div
+                id="productBottomSheet"
+                class="product-bottom-sheet hidden">
+
+                <div class="sheet-handle"></div>
+
+                <div
+                    id="sheetProductName"
+                    class="sheet-product-name">
+                </div>
+
+                <div
+                    id="sheetProductMeta"
+                    class="sheet-product-meta">
+                </div>
+
+                <div class="sheet-quantity">
+
+                    <button
+                        id="qtyMinusBtn"
+                        type="button"
+                        class="qty-btn">
+
+                        −
+
+                    </button>
+
+                    <span
+                        id="sheetQuantity">
+
+                        1
+
+                    </span>
+
+                    <button
+                        id="qtyPlusBtn"
+                        type="button"
+                        class="qty-btn">
+
+                        +
+
+                    </button>
+
+                </div>
+
+                <div class="sheet-actions">
+
+                    <button
+                        id="cancelProductBtn"
+                        type="button"
+                        class="secondary-btn">
+
+                        Cancel
+
+                    </button>
+
+                    <button
+                        id="confirmAddProductBtn"
+                        type="button"
+                        class="primary-btn">
+
+                        Add Product
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- <div class="version">
+
+        v1.0.0
+
+    </div> -->
 
     <script src="js/app.js"></script>
 </body>
