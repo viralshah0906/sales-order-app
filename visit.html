@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Field Sales Order Collection</title>
+
+
+    <link
+        rel="stylesheet"
+        href="css/styles.css"
+    >
+</head>
+
+<body>
+    <div class="version">
+
+        v1.0.0
+
+    </div>
+
+    <div class="app-container">
+
+        <header class="app-header">
+
+            <div class="header-top">
+
+                <h1>
+                    Record Visit
+                </h1>
+
+                <!-- <p>
+                    Create and submit customer orders
+                </p> -->
+
+            </div>
+
+            <div class="nav-tabs">
+
+                <a
+                    href="index.html"
+                    class="tab"
+                >
+                    📝 Place Order
+                </a>
+
+                <a
+                    href="visit.html"
+                    class="tab active"
+                >
+                    🚶 Record Visit
+                </a>
+
+            </div>
+
+        </header>
+
+        <main>
+
+            <!-- SHOP DETAILS -->
+
+            <section class="card">
+
+                <div class="section-title">
+                    🏪 Shop Details
+                </div>
+
+                <div id="shopSearchContainer">
+
+                    <div class="form-group">
+
+                        <label>
+                            Shop Name *
+                        </label>
+
+                        <input
+                            id="shopName"
+                            type="text"
+                            placeholder="Enter shop name"
+                        >
+
+                        <div
+                            id="shopSuggestions"
+                            class="shop-suggestions"
+                        ></div>
+
+                    </div>
+
+                </div>
+
+                <div id="selectedShopCard" class="selected-shop-card hidden">
+
+                    <div class="selected-shop-main">
+
+                        <div class="selected-shop-title">
+
+                            <span
+                                id="selectedShopDot"
+                                class="shop-status-dot">
+                            </span>
+
+                            <span
+                                id="selectedShopName"
+                                class="selected-shop-name">
+                            </span>
+
+                        </div>
+
+                        <div
+                            id="selectedShopContact"
+                            class="selected-shop-contact">
+                        </div>
+
+                        <div
+                            id="selectedShopAddress"
+                            class="selected-shop-address">
+                        </div>
+
+                    </div>
+
+                    <div class="selected-shop-actions">
+
+                        <button
+                            id="editShopBtn"
+                            type="button"
+                            class="card-action-btn">
+
+                            ✏️ Edit
+
+                        </button>
+
+                        <button
+                            id="changeShopBtn"
+                            type="button"
+                            class="card-action-btn">
+
+                            🔄 Change
+
+                        </button>
+
+                    </div>
+
+                    <div
+                        id="shopEditSection"
+                        class="shop-edit-section hidden">
+
+                        <div class="form-group">
+
+                            <label>
+                                Contact Number
+                            </label>
+
+                            <input
+                                id="editContactNumber"
+                                type="text"
+                            >
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>
+                                Address
+                            </label>
+
+                            <textarea
+                                id="editAddress"
+                                rows="3">
+                            </textarea>
+
+                        </div>
+
+                        <div class="shop-edit-actions">
+
+                            <button
+                                id="saveShopBtn"
+                                type="button"
+                                class="primary-btn">
+
+                                Save
+
+                            </button>
+
+                            <button
+                                id="cancelShopBtn"
+                                type="button"
+                                class="secondary-btn">
+
+                                Cancel
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div id="shopDetailsContainer">
+
+                    <div class="form-group">
+
+                        <label>
+                            Contact Number *
+                        </label>
+
+                        <input
+                            id="contactNumber"
+                            type="tel"
+                            placeholder="Enter contact number"
+                        >
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>
+                            Address
+                        </label>
+
+                        <textarea
+                            id="address"
+                            rows="2"
+                            placeholder="Enter address"
+                        ></textarea>
+
+                    </div>
+
+                </div>
+                    
+            </section>
+
+            <section class="card">
+
+                <div class="section-title">
+
+                    📝 Visit Details
+
+                </div>
+
+                <div id="visitReasons"
+                    class="visit-reasons">
+
+                    <button
+                        class="visit-chip"
+                        data-value="NO_ORDER">
+
+                        No Order
+
+                    </button>
+
+                    <button
+                        class="visit-chip"
+                        data-value="SHOP_CLOSED">
+
+                        Shop Closed
+
+                    </button>
+
+                    <button
+                        class="visit-chip"
+                        data-value="OWNER_UNAVAILABLE">
+
+                        Owner Unavailable
+
+                    </button>
+
+                    <button
+                        class="visit-chip"
+                        data-value="PAYMENT_PENDING">
+
+                        Payment Pending
+
+                    </button>
+
+                    <button
+                        class="visit-chip"
+                        data-value="ALREADY_STOCKED">
+
+                        Already Stocked
+
+                    </button>
+
+                    <button
+                        class="visit-chip"
+                        data-value="OTHER">
+
+                        Other
+
+                    </button>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Remarks
+
+                    </label>
+
+                    <textarea
+                        id="visitRemarks"
+                        rows="4"
+                        placeholder="Optional remarks">
+
+                    </textarea>
+
+                </div>
+
+            </section>
+
+            
+        </main>
+
+    </div>
+
+    <!-- STICKY FOOTER -->
+
+    <footer class="summary-footer">
+
+        <div>
+
+            <b>Record Shop Visit</b>
+
+        </div>
+
+        <button id="submitVisitBtn">
+
+            Submit Visit
+
+        </button>
+
+    </footer>
+
+    <!-- VISIT REVIEW MODAL -->
+
+    <div id="reviewModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h2>Review Visit</h2>
+
+            <div id="reviewContent"></div>
+
+            <div class="modal-actions">
+
+                <button
+                    id="cancelReviewBtn"
+                    class="secondary-btn"
+                >
+                    Cancel
+                </button>
+
+                <button
+                    id="confirmVisitBtn"
+                    class="primary-btn"
+                >
+                    Confirm Visit
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- SUCCESS MODAL -->
+
+    <div id="successModal" class="modal hidden">
+
+        <div class="modal-content">
+
+            <h2>✅ Visit Recorded</h2>
+
+            <div id="successContent"></div>
+
+            <div class="modal-actions">
+
+                <button
+                    id="newVisitBtn"
+                    class="primary-btn"
+                >
+                    New Visit
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- TOAST -->
+
+    <div id="toast" class="toast">
+        <span id="toastMessage"></span>
+    </div>
+
+    
+    <!-- <div class="version">
+
+        v1.0.0
+
+    </div> -->
+
+    <script src="js/visit.js"></script>
+</body>
+
+</html>

@@ -155,7 +155,7 @@ textarea:focus {
     font-weight: bold;
 }
 
-#submitBtn {
+#submitBtn, #submitVisitBtn {
     background: #2563eb;
     color: white;
     border: none;
@@ -1247,4 +1247,50 @@ textarea:focus {
 .remove-btn:hover{
 
     background:#fee2e2;
+}
+
+/* Visit form styles */
+
+.visit-reasons{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:12px;
+
+    margin-bottom:20px;
+}
+
+.visit-chip{
+
+    padding:18px 12px;
+
+    border:2px solid #dbe4f0;
+
+    background:white;
+
+    border-radius:16px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.15s;
+}
+
+.visit-chip.active{
+
+    background:#2563eb;
+
+    color:white;
+
+    border-color:#2563eb;
+}
+
+.visit-chip:active{
+
+    transform:scale(.98);
 }
