@@ -83,6 +83,41 @@ const shopDetailsContainer =
         "shopDetailsContainer"
     );
 
+const nearbyBtn =
+    document.getElementById(
+        "nearbyBtn"
+    );
+
+nearbyBtn.addEventListener(
+    "click",
+    showNearbyShops
+);
+
+const nearbyOverlay =
+    document.getElementById(
+        "nearbyOverlay"
+    );
+
+const nearbyBottomSheet =
+    document.getElementById(
+        "nearbyBottomSheet"
+    );
+
+const nearbyResults =
+    document.getElementById(
+        "nearbyResults"
+    );
+
+const nearbyStatus =
+    document.getElementById(
+        "nearbyStatus"
+    );
+
+const closeNearbyBtn =
+    document.getElementById(
+        "closeNearbyBtn"
+    );
+
 const editContactNumber =
     document.getElementById(
         "editContactNumber"
@@ -158,6 +193,26 @@ const toastMessage =
         "toastMessage"
     );
 
+const startupOverlay =
+    document.getElementById(
+        "startupOverlay"
+    );
+
+const startupMessage =
+    document.getElementById(
+        "startupMessage"
+    );
+
+const submissionOverlay =
+    document.getElementById(
+        "submissionOverlay"
+    );
+
+const submissionMessage =
+    document.getElementById(
+        "submissionMessage"
+    );
+
 /*
  * ==========================================
  * STATE
@@ -173,6 +228,8 @@ let selectedVisitReason = "";
 let currentLatitude = null;
 
 let currentLongitude = null;
+
+let isSubmitting = false;
 
 
 /*
@@ -763,7 +820,19 @@ confirmVisitBtn.addEventListener(
 
 async function confirmVisit() {
 
+    if (isSubmitting) {
+
+        return;
+
+    }
+
+    isSubmitting = true;
+
     startLoading();
+
+    showSubmissionOverlay(
+        "Submitting Visit..."
+    );
 
     showToast(
         "Capturing location..."
@@ -914,6 +983,10 @@ async function confirmVisit() {
 
     } finally {
 
+        isSubmitting = false;
+
+        hideSubmissionOverlay();
+
         stopLoading();
 
     }
@@ -979,4 +1052,337 @@ function resetVisit() {
  * ==========================================
  */
 
-loadShops();
+(async function init(){
+
+    startupMessage.textContent =
+        "Preparing application...";
+
+    await loadShops();
+
+    startupMessage.textContent =
+        "Ready";
+
+    setTimeout(
+        hideStartupOverlay,
+        300
+    );
+
+})();
+
+// Nearby Shops 
+
+function openNearbySheet() {
+
+    nearbyOverlay.classList.remove(
+        "hidden"
+    );
+
+    nearbyBottomSheet.classList.remove(
+        "hidden"
+    );
+
+}
+
+function closeNearbySheet() {
+
+    nearbyOverlay.classList.add("hidden");
+
+    nearbyBottomSheet.classList.add("hidden");
+
+    nearbyResults.innerHTML = "";
+
+    nearbyStatus.textContent = "";
+
+}
+
+closeNearbyBtn.addEventListener(
+    "click",
+    closeNearbySheet
+);
+
+nearbyOverlay.addEventListener(
+    "click",
+    closeNearbySheet
+);
+
+function getDistanceMeters(
+    lat1,
+    lon1,
+    lat2,
+    lon2
+) {
+
+    const R = 6371000;
+
+    const toRad =
+        deg =>
+            deg * Math.PI / 180;
+
+    const dLat =
+        toRad(lat2 - lat1);
+
+    const dLon =
+        toRad(lon2 - lon1);
+
+    const a =
+
+        Math.sin(dLat / 2) *
+        Math.sin(dLat / 2)
+
+        +
+
+        Math.cos(toRad(lat1)) *
+        Math.cos(toRad(lat2))
+
+        *
+
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+
+    const c =
+        2 *
+        Math.atan2(
+            Math.sqrt(a),
+            Math.sqrt(1 - a)
+        );
+
+    return R * c;
+
+}
+
+async function showNearbyShops() {
+
+    try {
+
+        openNearbySheet();
+
+        nearbyStatus.textContent =
+            "Getting your location...";
+
+        nearbyResults.innerHTML = "";
+
+        const location =
+            await getCurrentLocation();
+
+        nearbyStatus.textContent =
+            "Finding nearby shops...";
+
+        const nearby =
+
+            SHOPS
+
+            .filter(shop =>
+
+                Number.isFinite(shop.latitude) &&
+
+                Number.isFinite(shop.longitude)
+
+            )
+
+            .map(shop => ({
+
+                ...shop,
+
+                distance:
+
+                    getDistanceMeters(
+
+                        location.latitude,
+
+                        location.longitude,
+
+                        Number(shop.latitude),
+
+                        Number(shop.longitude)
+
+                    )
+
+            }))
+
+            .sort(
+                (a, b) =>
+                    a.distance - b.distance
+            )
+
+            .slice(0, 10);
+
+        renderNearbyShops(
+            nearby
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        nearbyStatus.textContent =
+            "Location unavailable";
+
+        nearbyResults.innerHTML = "";
+
+        showToast(
+            "Location permission required"
+        );
+
+    }
+
+}
+
+function renderNearbyShops(
+    shops
+) {
+
+    nearbyResults.innerHTML = "";
+
+    if (shops.length === 0) {
+
+        nearbyStatus.textContent =
+            "No nearby shops found";
+
+        return;
+
+    }
+
+    nearbyStatus.textContent =
+        `Showing ${shops.length} nearest shops`;
+
+    shops.forEach(shop => {
+
+        const div =
+            document.createElement("div");
+
+        div.className =
+            "shop-item";
+
+        let distanceText;
+
+        if (
+            shop.distance < 1000
+        ) {
+
+            distanceText =
+                `${Math.round(shop.distance)} m`;
+
+        } else {
+
+            distanceText =
+                `${(
+                    shop.distance / 1000
+                ).toFixed(1)} km`;
+
+        }
+
+        const isVeryNear =
+            shop.distance <= 50;
+
+        const nearbyBadge =
+
+            isVeryNear
+
+            ?
+
+            `<span class="nearby-badge">
+
+                Nearby
+
+            </span>`
+
+            :
+
+            "";
+
+        const dot =
+
+            shop.status ===
+            "CUSTOMER"
+
+                ? "🟢"
+
+                : "🔴";
+
+        div.innerHTML = `
+
+            <div class="shop-row">
+
+                <div class="shop-name">
+
+                    ${dot}
+                    ${shop.name}
+                    ${nearbyBadge}
+
+                </div>
+
+                <div class="nearby-distance">
+
+                    ${distanceText}
+
+                </div>
+
+            </div>
+
+            <div class="shop-address">
+
+                ${shop.address || "-"}
+
+            </div>
+
+            <div class="shop-contact">
+
+                ${shop.contact || "-"}
+
+            </div>
+
+        `;
+
+        div.addEventListener(
+            "click",
+            () => {
+
+                selectShop(shop);
+
+                closeNearbySheet();
+
+            }
+        );
+
+        nearbyResults.appendChild(
+            div
+        );
+
+    });
+
+}
+
+// overlay helper
+function hideStartupOverlay(){
+
+    startupOverlay.classList.add(
+        "hidden"
+    );
+
+    setTimeout(() => {
+
+        startupOverlay.style.display =
+            "none";
+
+    }, 250);
+
+}
+
+function showSubmissionOverlay(message){
+
+    submissionMessage.textContent =
+        message;
+
+    submissionOverlay.classList.remove(
+        "hidden"
+    );
+
+}
+
+function hideSubmissionOverlay(){
+
+    submissionOverlay.classList.add(
+        "hidden"
+    );
+
+}

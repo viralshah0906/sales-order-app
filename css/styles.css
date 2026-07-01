@@ -332,6 +332,99 @@ textarea:focus {
     visibility: visible;
 }
 
+/* Overlay */
+.startup-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(255,255,255,.88);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+    transition:opacity .25s ease;
+
+}
+
+.startup-overlay.hidden{
+
+    opacity:0;
+
+    pointer-events:none;
+
+}
+
+.startup-card{
+
+    background:#fff;
+
+    padding:32px 36px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.12);
+
+    text-align:center;
+
+    min-width:220px;
+
+}
+
+.startup-message{
+
+    margin-top:18px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#374151;
+
+    letter-spacing:.2px;
+
+}
+
+.loader{
+
+    width:56px;
+
+    height:56px;
+
+    border:5px solid #dbeafe;
+
+    border-top:5px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:spin .9s linear infinite;
+
+    margin:0 auto;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
+}
+
 .no-results {
     padding: 12px;
     text-align: center;
@@ -1293,4 +1386,103 @@ textarea:focus {
 .visit-chip:active{
 
     transform:scale(.98);
+}
+
+/* Nearby Shops */
+
+.nearby-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-top:8px;
+
+    margin-bottom:18px;
+
+}
+
+.nearby-btn{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:4px;
+
+    background:#eff6ff;
+
+    color:#2563eb;
+
+    border:none;
+
+    border-radius:999px;
+
+    padding:5px 10px;
+
+    font-size:12px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.nearby-btn:hover{
+
+    background:#dbeafe;
+    opacity:.8;
+
+}
+
+.nearby-badge{
+
+    margin-left:8px;
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    font-size:11px;
+
+    font-weight:700;
+
+    padding:2px 8px;
+
+    border-radius:999px;
+
+}
+
+.nearby-distance{
+
+    color:#2563eb;
+
+    font-weight:700;
+
+    font-size:13px;
+
+    white-space:nowrap;
+
+}
+
+.shop-name-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:8px;
+
+}
+
+.shop-name-header label{
+
+    margin:0;
+
+    font-weight:600;
+
 }

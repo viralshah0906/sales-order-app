@@ -20,7 +20,7 @@
 <body>
     <div class="version">
 
-        v1.1.0
+        v1.2.0
 
     </div>
 
@@ -74,9 +74,22 @@
 
                     <div class="form-group">
 
-                        <label>
-                            Shop Name *
-                        </label>
+                        <div class="shop-name-header">
+
+                            <label>
+                                Shop Name *
+                            </label>
+
+                            <button
+                                id="nearbyBtn"
+                                type="button"
+                                class="nearby-btn">
+
+                                📍 Nearby
+
+                            </button>
+
+                        </div>
 
                         <input
                             id="shopName"
@@ -395,18 +408,94 @@
 
     </div>
 
+    <div
+        id="nearbyOverlay"
+        class="sheet-overlay hidden">
+    </div>
+
+    <div
+        id="nearbyBottomSheet"
+        class="product-bottom-sheet hidden">
+
+        <div class="sheet-handle"></div>
+
+        <div class="modal-header">
+
+            <h2>
+
+                📍 Nearby Shops
+
+            </h2>
+
+            <button
+                id="closeNearbyBtn"
+                class="close-btn">
+
+                ✕
+
+            </button>
+
+        </div>
+
+        <div
+            id="nearbyStatus"
+            class="product-count">
+
+        </div>
+
+        <div
+            id="nearbyResults"
+            class="modal-search-results">
+
+        </div>
+
+    </div>
+
+    <div
+        id="startupOverlay"
+        class="startup-overlay">
+
+        <div class="startup-card">
+
+            <div class="loader"></div>
+
+            <div
+                id="startupMessage"
+                class="startup-message">
+
+                Preparing application...
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div
+        id="submissionOverlay"
+        class="startup-overlay hidden">
+
+        <div class="startup-card">
+
+            <div class="loader"></div>
+
+            <div
+                id="submissionMessage"
+                class="startup-message">
+
+                Submitting Order...
+
+            </div>
+
+        </div>
+
+    </div>
+
     <!-- TOAST -->
 
     <div id="toast" class="toast">
         <span id="toastMessage"></span>
     </div>
-
-    
-    <!-- <div class="version">
-
-        v1.1.0
-
-    </div> -->
 
     <script src="js/visit.js"></script>
 </body>
