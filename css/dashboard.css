@@ -314,7 +314,7 @@ body {
 
     border-radius: 24px;
 
-    padding: 24px;
+    padding: 0;
 
     z-index: 1001;
 
@@ -624,4 +624,240 @@ body {
     box-shadow:
         0 10px 30px
         rgba(0,0,0,0.1);
+}
+
+.modal-header{
+
+    position:sticky;
+
+    top:0;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:16px 20px;
+
+    background:#fff;
+
+    border-bottom:1px solid #e5e7eb;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.05);
+
+    z-index:20;
+
+}
+
+.modal-title{
+
+    margin:0;
+
+    font-size:18px;
+
+    font-weight:700;
+
+    color:#111827;
+
+}
+
+#modalBody{
+
+    padding:20px 24px 24px;
+
+}
+
+.share-actions{
+
+    padding:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:14px;
+
+}
+
+.share-action{
+
+    border:none;
+
+    border-radius:14px;
+
+    background:#f8fafc;
+
+    padding:16px;
+
+    text-align:left;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+.share-action:hover{
+
+    background:#eef2ff;
+
+}
+
+.sheet-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    z-index:1100;
+
+}
+
+.product-bottom-sheet{
+
+    position:fixed;
+
+    left:0;
+
+    right:0;
+
+    bottom:0;
+
+    background:#fff;
+
+    border-radius:24px 24px 0 0;
+
+    max-height:75vh;
+
+    overflow-y:auto;
+
+    z-index:1101;
+
+    animation:slideUp .22s ease;
+
+}
+
+.sheet-handle{
+
+    width:44px;
+
+    height:5px;
+
+    background:#d1d5db;
+
+    border-radius:999px;
+
+    margin:12px auto;
+
+}
+
+@keyframes slideUp{
+
+    from{
+
+        transform:translateY(100%);
+
+    }
+
+    to{
+
+        transform:translateY(0);
+
+    }
+
+}
+
+.startup-overlay{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(255,255,255,.88);
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    z-index:9999;
+
+    transition:opacity .25s ease;
+
+}
+
+.startup-overlay.hidden{
+
+    display:none;
+
+}
+
+.startup-card{
+
+    background:#fff;
+
+    padding:32px 36px;
+
+    border-radius:20px;
+
+    box-shadow:0 10px 35px rgba(0,0,0,.12);
+
+    text-align:center;
+
+    min-width:220px;
+
+}
+
+.startup-message{
+
+    margin-top:18px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    color:#374151;
+
+}
+
+.loader{
+
+    width:56px;
+
+    height:56px;
+
+    border:5px solid #dbeafe;
+
+    border-top:5px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:spin .9s linear infinite;
+
+    margin:0 auto;
+
+}
+
+@keyframes spin{
+
+    from{
+
+        transform:rotate(0deg);
+
+    }
+
+    to{
+
+        transform:rotate(360deg);
+
+    }
+
 }

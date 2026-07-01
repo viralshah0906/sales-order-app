@@ -2,6 +2,7 @@ const API_URL =
     "https://script.google.com/macros/s/AKfycbzCGyw512dT1ahJeD_8CVAH59_iSadbtm4CqcRt7vzrHMMCjnLpcibgYkoNbQ1r5-g/exec";
 
 let currentOrders = [];
+let isLoggingIn = false;
 // let filteredOrders = [];
 
 /* LOGIN */
@@ -146,6 +147,62 @@ const modalBody =
         "modalBody"
     );
 
+const shareOverlay =
+    document.getElementById(
+        "shareOverlay"
+    );
+
+const shareBottomSheet =
+    document.getElementById(
+        "shareBottomSheet"
+    );
+
+const closeShareBtn =
+    document.getElementById(
+        "closeShareBtn"
+    );
+
+const shareWhatsappBtn =
+    document.getElementById(
+        "shareWhatsappBtn"
+    );
+
+shareWhatsappBtn.onclick = () => {
+
+    shareOrderOnWhatsApp(
+        currentShareOrder.orderId
+    );
+
+    closeShareSheet();
+
+};
+
+const shareSmsBtn =
+    document.getElementById(
+        "shareSmsBtn"
+    );
+
+const copyOrderBtn =
+    document.getElementById(
+        "copyOrderBtn"
+    );
+
+closeShareBtn.onclick =
+    closeShareSheet;
+
+shareOverlay.onclick =
+    closeShareSheet;
+
+const loginOverlay =
+    document.getElementById(
+        "loginOverlay"
+    );
+
+const loginMessage =
+    document.getElementById(
+        "loginMessage"
+    );
+
 const closeModalBtn =
     document.getElementById(
         "closeModalBtn"
@@ -249,6 +306,10 @@ function showLogin() {
 
 async function showDashboard() {
 
+    showLoginOverlay(
+        "Opening dashboard..."
+    );
+    
     loginScreen.classList.add(
         "hidden"
     );
@@ -270,11 +331,31 @@ async function showDashboard() {
 
     handlePresetChange();
 
-    await loadDashboard();
+    showLoginOverlay(
+            "Opening dashboard..."
+        );
 
-    await loadOrders();
+    loginMessage.textContent =
+        "Loading dashboard...";
+
+    await Promise.all([
+
+        loadDashboard(),
+
+        loadOrders()
+
+    ]);
 
     updateLastUpdated();
+
+    loginMessage.textContent =
+        "Ready";
+
+    setTimeout(() => {
+
+        hideLoginOverlay();
+
+    }, 250);
 }
 
 async function applyFilters() {
@@ -330,6 +411,12 @@ async function clearFilters() {
 
 async function login() {
 
+    if (isLoggingIn) {
+
+        return;
+
+    }
+
     const password =
         passwordInput.value.trim();
 
@@ -342,7 +429,14 @@ async function login() {
         return;
     }
 
+    isLoggingIn = true;
+
     loginBtn.disabled = true;
+
+    showLoginOverlay(
+        "Opening dashboard..."
+    );
+    console.log("Login overlay shown");
 
     try {
 
@@ -367,16 +461,21 @@ async function login() {
 
         } else {
 
+            hideLoginOverlay();
+
             alert(
                 "Invalid password"
             );
+
         }
 
     } catch (error) {
-
+        
         console.error(
             error
         );
+
+        hideLoginOverlay();
 
         alert(
             "Login failed"
@@ -384,9 +483,13 @@ async function login() {
 
     } finally {
 
+        isLoggingIn = false;
+
         loginBtn.disabled =
             false;
+
     }
+
 }
 
 function logout() {
@@ -664,10 +767,6 @@ function openOrderModal(
 
     modalBody.innerHTML = `
 
-        <h2>
-            Order Details
-        </h2>
-
         <div class="detail-block">
 
             <strong>
@@ -746,7 +845,7 @@ function openOrderModal(
 
             <button
                 class="whatsapp-btn"
-                onclick="shareOrderOnWhatsApp('${order.orderId}')"
+                onclick="openShareSheet('${order.orderId}')"
             >
                 📲 Share Order
             </button>
@@ -782,37 +881,42 @@ function shareOrderOnWhatsApp(
         return;
     }
 
-    let message =
-`🧾 ORDER CONFIRMATION
+//     let message =
+// `🧾 ORDER CONFIRMATION
 
-Order ID:
-${order.orderId}
+// Order ID:
+// ${order.orderId}
 
-Shop:
-${order.shopName}
+// Shop:
+// ${order.shopName}
 
-Products:
+// Products:
 
-`;
+// `;
 
-    order.products.forEach(
-        product => {
+//     order.products.forEach(
+//         product => {
 
-            message +=
-`• ${product.productName}
-Qty: ${product.quantity}
-Amount: ₹${product.lineTotal}
+//             message +=
+// `• ${product.productName}
+// Qty: ${product.quantity}
+// Amount: ₹${product.lineTotal}
 
-`;
-        }
-    );
+// `;
+//         }
+//     );
 
-    message +=
-`Grand Total: ₹${Number(
-    order.grandTotal
-).toLocaleString()}
+//     message +=
+// `Grand Total: ₹${Number(
+//     order.grandTotal
+// ).toLocaleString()}
 
-Thank You`;
+// Thank You`;
+    const message =
+        buildOrderMessage(
+            order,
+            "whatsapp"
+        );
 
     const phone =
         String(
@@ -931,4 +1035,219 @@ function updateLastUpdated() {
         "Last Updated: " +
         new Date()
             .toLocaleString();
+}
+
+let currentShareOrder = null;
+
+function openShareSheet(
+    orderId
+) {
+
+    currentShareOrder =
+        currentOrders.find(
+            order =>
+                order.orderId === orderId
+        );
+
+    if (!currentShareOrder) {
+
+        alert(
+            "Order not found"
+        );
+
+        return;
+
+    }
+
+    shareOverlay.classList.remove(
+        "hidden"
+    );
+
+    shareBottomSheet.classList.remove(
+        "hidden"
+    );
+
+}
+
+function closeShareSheet(){
+
+    currentShareOrder = null;
+
+    shareOverlay.classList.add(
+        "hidden"
+    );
+
+    shareBottomSheet.classList.add(
+        "hidden"
+    );
+
+}
+
+function buildOrderMessage(
+    order,
+    type = "whatsapp"
+) {
+
+    const totalItems =
+        order.products.reduce(
+            (sum, product) =>
+                sum +
+                Number(product.quantity),
+            0
+        );
+
+    if (type === "sms") {
+
+        let message =
+`${order.shopName}
+
+`;
+
+        order.products.forEach(product => {
+
+            message +=
+`• *${product.productName}*
+
+${product.quantity} × ₹${product.rate} = ₹${product.lineTotal}
+
+`;
+
+        });
+
+        message +=
+`Items: ${totalItems}
+Total: ₹${Number(order.grandTotal).toLocaleString()}
+
+Thank you!`;
+
+        return message;
+    }
+
+    // WhatsApp / Copy version
+
+    let message =
+`🧾 *ORDER SUMMARY*
+
+🏪 ${order.shopName}
+
+📅 ${new Date(order.timestamp)
+    .toLocaleString(
+        "en-IN",
+        {
+            dateStyle: "medium",
+            timeStyle: "short"
+        }
+    )}
+
+━━━━━━━━━━━━━━━━━━
+
+`;
+
+    order.products.forEach(product => {
+
+        message +=
+`*${product.productName}*
+
+${product.quantity} × ₹${product.rate} = ₹${product.lineTotal}
+
+`;
+
+    });
+
+    message +=
+`━━━━━━━━━━━━━━━━━━
+
+*Total Items:* ${totalItems}
+
+*Grand Total:* ₹${Number(order.grandTotal).toLocaleString()}
+
+Thank you for your order! 🙏`;
+
+    return message;
+
+}
+
+function shareOrderBySMS(){
+
+    const message =
+        buildOrderMessage(
+            currentShareOrder,
+            "sms"
+        );
+
+    const phone =
+        String(
+            currentShareOrder.contactNumber
+        ).replace(/\D/g,"");
+
+    window.location.href =
+        `sms:${phone}?body=${encodeURIComponent(message)}`;
+
+}
+
+shareSmsBtn.onclick = () => {
+
+    shareOrderBySMS();
+
+    closeShareSheet();
+
+};
+
+async function copyOrderText(){
+
+    const message =
+        buildOrderMessage(
+            currentShareOrder,
+            "whatsapp"
+        );
+
+    try{
+
+        await navigator.clipboard.writeText(
+            message
+        );
+
+        alert(
+            "Order copied"
+        );
+
+    }
+
+    catch{
+
+        alert(
+            "Copy failed"
+        );
+
+    }
+
+}
+
+copyOrderBtn.onclick = async () => {
+
+    await copyOrderText();
+
+    closeShareSheet();
+
+};
+
+function showLoginOverlay(
+    message = "Verifying access..."
+){
+
+    loginMessage.textContent =
+        message;
+
+    loginOverlay.classList.remove(
+        "hidden"
+    );
+
+}
+
+function hideLoginOverlay(){
+
+    loginOverlay.classList.add(
+        "hidden"
+    );
+
 }
